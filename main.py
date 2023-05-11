@@ -13,11 +13,13 @@ class Persona (BaseModel):
 personaList = []
 
 @app.post("/personas", response_model=Persona)
+
 def crear_persona(person: Persona):
     personaList.append(person)
     return person
 
 @app.get("/personas", response_model=List[Persona])
+
 def get_personas():
     return personaList
 
@@ -26,8 +28,13 @@ def obtener_persona (persona_id: int):
     for persona in personaList:
         if persona.id == persona_id:
             return persona
+
     raise HTTPException(status_code=404, detail="Persona no encontrada")
 
+ 
+
 @app.get("/")
+
 def read_root():
-    return {"Hello": "Interoperabilidad 2"}
+
+    return {"Hello": "Interoperabilidad"}
