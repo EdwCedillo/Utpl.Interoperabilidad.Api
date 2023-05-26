@@ -4,32 +4,35 @@ from typing import List, Optional
 
 app = FastAPI()
 
-class Persona (BaseModel):
-    id: int
-    nombre: str
-    edad: int
-    ciudad: Optional[str] = None
+class Cliente (BaseModel):
+    #declaracion de Atributos
+    ruc_ced: int
+    rason_social: str
+    nombre_comercial: str
+    tipo_cliente: str #si es cliente credito o contado
+    cupo: int #tiempo max credito
+    
 
-personaList = []
+clienteList = []
 
-@app.post("/personas", response_model=Persona)
+@app.post("/clientes", response_model = Cliente)
 
-def crear_persona(person: Persona):
-    personaList.append(person)
-    return person
+def crear_clientes(cliente: Cliente):
+    clienteList.append(cliente)
+    return cliente
 
-@app.get("/personas", response_model=List[Persona])
+@app.get("/clientes", response_model=List[Cliente])
 
-def get_personas():
-    return personaList
+def get_clientes():
+    return clienteList
 
-@app.get("/personas/{persona_id}", response_model=Persona)
-def obtener_persona (persona_id: int):
-    for persona in personaList:
-        if persona.id == persona_id:
-            return persona
+@app.get("/clientes/{cliente_id}", response_model=Cliente)
+def obtener_cliente (cliente_id: int):
+    for cliente in clienteList:
+        if cliente.ruc_ced == cliente_id:
+            return cliente
 
-    raise HTTPException(status_code=404, detail="Persona no encontrada")
+    raise HTTPException(status_code=404, detail="Cliente no encontrada")
 
  
 
@@ -37,5 +40,4 @@ def obtener_persona (persona_id: int):
 
 def read_root():
 
-    return {"Hello": "Interoperabilidad edw"}
-    
+    return {"Hello": "Interoperabilidad Ejemplo Cliente"}
