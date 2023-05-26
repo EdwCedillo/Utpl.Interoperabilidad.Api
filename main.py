@@ -37,4 +37,5 @@ def obtener_persona (persona_id: int):
 
 def read_root():
 
-    return {"Hello": "Interoperabilidad"}
+    return {"Hello": "Interoperabilidad edw"}
+    
