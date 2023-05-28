@@ -34,10 +34,16 @@ def obtener_cliente (cliente_id: int):
 
     raise HTTPException(status_code=404, detail="Cliente no encontrada")
 
- 
+@app.delete("/clientes/{cliente_id}")
+def eliminar_cliente(cliente_id: int):
+    cliente = next((p for p in clienteList if p.id == cliente_id), None)
+    if cliente:
+        clienteList.remove(cliente)
+        return {"mensaje": "Cliente eliminado exitosamente"}
+    else:
+        raise HTTPException(status_code=404, detail="Cliente no encontrado")
 
 @app.get("/")
-
 def read_root():
 
     return {"Hello": "Interoperabilidad Ejemplo Cliente"}
