@@ -9,7 +9,38 @@ sp = spotipy.Spotify(auth_manager=spotipy.oauth2.SpotifyClientCredentials(
 
 ))
 
-app = FastAPI()
+description = """
+Utpl tnteroperabilidad API ayuda a describir las capacidades de un directorio. 🚀
+
+## Items
+
+You can **read items**.
+
+## Users
+
+You will be able to:
+
+* **Create users** (_not implemented_).
+* **Read users** (_not implemented_).
+"""
+app = FastAPI(
+    title="Utpl Interoperabilidad APP",
+    description= description,
+    version="0.0.1",
+    terms_of_service="http://example.com/terms/",
+    contact={
+        "name": "Felipe Quiñonez",
+        "url": "http://x-force.example.com/contact/",
+        "email": "fdquinones@utpl.edu.ec",
+    },
+    license_info={
+        "name": "Apache 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
+    }
+)
+
+
+
 
 class Cliente (BaseModel):
     #declaracion de Atributos
@@ -55,7 +86,7 @@ def eliminar_cliente(cliente_id: int):
 async def obtener_pista(pista_id: str):
     track = sp.track(pista_id)
     return track
-    
+
 @app.get("/artistas/{artista_id}")
 async def get_artista(artista_id: str):
     artista = sp.artist(artista_id)
