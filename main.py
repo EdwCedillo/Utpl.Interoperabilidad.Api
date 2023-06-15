@@ -55,7 +55,11 @@ def eliminar_cliente(cliente_id: int):
 async def obtener_pista(pista_id: str):
     track = sp.track(pista_id)
     return track
-
+    
+@app.get("/artistas/{artista_id}")
+async def get_artista(artista_id: str):
+    artista = sp.artist(artista_id)
+    return artista
 
 @app.get("/")
 def read_root():
