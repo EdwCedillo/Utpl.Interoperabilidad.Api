@@ -2,6 +2,13 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
 
+import spotipy 
+sp = spotipy.Spotify(auth_manager=spotipy.oauth2.SpotifyClientCredentials(
+    client_id='e8e9514c8b294c069e0e973793fdfb6a',
+    client_secret='0ec67c8485154b28a2476e912e339b22'
+
+))
+
 app = FastAPI()
 
 class Cliente (BaseModel):
@@ -42,6 +49,13 @@ def eliminar_cliente(cliente_id: int):
         return {"mensaje": "Cliente eliminado exitosamente"}
     else:
         raise HTTPException(status_code=404, detail="Cliente no encontrado")
+
+
+@app.get("/pista/{pista_id}")
+async def obtener_pista(pista_id: str):
+    track = sp.track(pista_id)
+    return track
+
 
 @app.get("/")
 def read_root():
