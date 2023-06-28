@@ -1,4 +1,4 @@
 tasks:
-  - init: pip install fastapi uvicorn spotipy pymongo
+  - init: pip install fastapi uvicorn spotipy pymongo fastapi-versioning
 
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
