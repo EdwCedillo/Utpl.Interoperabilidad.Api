@@ -107,7 +107,7 @@ async def crear_cliente(clienteE: ClienteEntrada):
 
 @app.get("/clientes/{cliente_id}", response_model= Cliente , tags=["clientes"])
 @version(1, 0)
-def obtener_persona (cliente_id: str):
+def obtener_cliente(cliente_id: str):
     item = coleccion.find_one({"ruc_ced": cliente_id})
     if item:
         return item
@@ -117,7 +117,7 @@ def obtener_persona (cliente_id: str):
 
 @app.delete("/clientes/{cliente_id}", tags=["clientes"])
 @version(1, 0)
-def eliminar_cliente(cliente_id: int):
+def eliminar_cliente(cliente_id: str):
     result = coleccion.delete_one({"ruc_ced": cliente_id})
     if result.deleted_count == 1:
         return {"mensaje": "Cliente eliminado exitosamente"}
@@ -140,3 +140,5 @@ async def get_artista(artista_id: str):
 def read_root():
 
     return {"Hello": "Interoperabilidad Ejemplo Cliente"}
+# Encapsulamiento del Fast Api Versioned
+app = VersionedFastAPI(app)
