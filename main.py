@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
 from typing import List, Optional
 import uuid
@@ -7,7 +7,7 @@ from fastapi_versioning import VersionedFastAPI, version
 
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
-from auth import authenticate
+#from auth import authenticate
 
 #seccion mongo importar libreria
 import pymongo
@@ -97,13 +97,13 @@ async def crear_cliente(clienteE: ClienteEntrada):
     resultadoDB =  coleccion.insert_one(itemCliente.dict())
     return itemCliente
 
-@app.get("/clientes", response_model=List[Cliente], tags=["clientes"])
-@version(1, 0)
-def get_clientes(credentials: HTTPBasicCredentials = Depends(security)):
-    authenticate(credentials)
-    items = list(coleccion.find())
-    print (items)
-    return items
+#@app.get("/clientes", response_model=List[Cliente], tags=["clientes"])
+#@version(1, 0)
+#def get_clientes(credentials: HTTPBasicCredentials = Depends(security)):
+#    authenticate(credentials)
+#    items = list(coleccion.find())
+#    print (items)
+#    return items
 
 @app.get("/clientes/{cliente_id}", response_model= Cliente , tags=["clientes"])
 @version(1, 0)
