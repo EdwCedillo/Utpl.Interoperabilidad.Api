@@ -104,7 +104,7 @@ async def crear_cliente(clienteE: ClienteEntrada):
     resultadoDB =  coleccion.insert_one(itemCliente.dict())
     return itemCliente
 
-#version 2
+#version 2 En este metodo para post se agrega otro parametro adicional (nombre_comercial)
 @app.post("/clientes", response_model = Cliente, tags = ["clientes"])
 @version(2, 0)
 async def crear_clientev2(clienteE: ClienteEntradaV2):
