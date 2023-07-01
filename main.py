@@ -6,12 +6,12 @@ import uuid
 from fastapi_versioning import VersionedFastAPI, version
 
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
-
-#from auth import authenticate
+#seccion auth importar libreria
+from auth import authenticate
 
 #seccion mongo importar libreria
 import pymongo
-
+#seccion spotipy importar libreria
 import spotipy 
 
 sp = spotipy.Spotify(auth_manager=spotipy.oauth2.SpotifyClientCredentials(
@@ -65,6 +65,7 @@ app = FastAPI(
     openapi_tags = tags_metadata
 )
 
+
 #para agregar seguridad a nuestro api
 security = HTTPBasic()
 
@@ -80,30 +81,45 @@ class Cliente (BaseModel):
     ruc_ced: str
     rason_social: str
     nombre_comercial: Optional[str] = None
-    tipo_cliente: str #si es cliente credito o contado
+    tipo_cliente: Optional[str] = None #si es cliente credito o contado
     cupo: int #tiempo max credito
 
 class ClienteEntrada (BaseModel):
     rason_social: str
     cupo: int
-    tipo_cliente: str 
+    tipo_cliente: Optional[str] = None
+
+class ClienteEntradaV2 (BaseModel):
+    rason_social: str
+    cupo: int
+    nombre_comercial: str
+    tipo_cliente: Optional[str] = None
 
 clienteList = [] #se utiliza una estructura de lista, ejercicio antes base de datos
 
-@app.post("/clientes", response_model= Cliente, tags = ["clientes"])
+@app.post("/clientes", response_model = Cliente, tags = ["clientes"])
 @version(1, 0)
 async def crear_cliente(clienteE: ClienteEntrada):
     itemCliente = Cliente (ruc_ced = str(uuid.uuid4()), rason_social = clienteE.rason_social, cupo = clienteE.cupo, tipo_cliente = clienteE.tipo_cliente)
     resultadoDB =  coleccion.insert_one(itemCliente.dict())
     return itemCliente
 
-#@app.get("/clientes", response_model=List[Cliente], tags=["clientes"])
-#@version(1, 0)
-#def get_clientes(credentials: HTTPBasicCredentials = Depends(security)):
-#    authenticate(credentials)
-#    items = list(coleccion.find())
-#    print (items)
-#    return items
+#version 2
+@app.post("/clientes", response_model = Cliente, tags = ["clientes"])
+@version(2, 0)
+async def crear_clientev2(clienteE: ClienteEntradaV2):
+    itemCliente = Cliente (ruc_ced = str(uuid.uuid4()), rason_social = clienteE.rason_social, cupo = clienteE.cupo, tipo_cliente = clienteE.tipo_cliente, nombre_comercial = clienteE.nombre_comercial)
+    resultadoDB =  coleccion.insert_one(itemCliente.dict())
+    return itemCliente
+
+
+@app.get("/clientes", response_model=List[Cliente], tags=["clientes"])
+@version(1, 0)
+def get_clientes(credentials: HTTPBasicCredentials = Depends(security)):
+    authenticate(credentials)
+    items = list(coleccion.find())
+    print (items)
+    return items
 
 @app.get("/clientes/{cliente_id}", response_model= Cliente , tags=["clientes"])
 @version(1, 0)
@@ -137,8 +153,13 @@ async def get_artista(artista_id: str):
     return artista
 
 @app.get("/")
+@version(1, 0)
 def read_root():
+    return {"Hello": "Interoperabilidad Ejemplo Cliente, version 1"}
 
-    return {"Hello": "Interoperabilidad Ejemplo Cliente"}
+@app.get("/")
+@version(2, 0)
+def read_root():
+    return {"Hello": "Interoperabilidad Ejemplo Cliente, version 2"}    
 # Encapsulamiento del Fast Api Versioned
 app = VersionedFastAPI(app)
